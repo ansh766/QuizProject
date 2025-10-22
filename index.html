@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>General Knowledge Quiz</title>
+    <style>
+        /* Start Page Styles */
+        .start-page {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-title {
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .start-button {
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #764ba2;
+            background-color: #ffffff;
+            text-decoration: none;
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            color: #667eea;
+        }
+
+        /* Quiz Page Styles */
+        .quiz-page {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .quiz-container {
+            background-color: #ffffff;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .quiz-question {
+            margin-bottom: 2.5rem;
+            border-top: 1px solid #eee;
+            padding-top: 2rem;
+        }
+
+        .quiz-question:first-child {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option input[type="radio"] {
+            display: none;
+        }
+
+        .option label {
+            display: block;
+            background-color: #f0f8ff;
+            border: 2px solid #bce0fd;
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option label:hover {
+            background-color: #d9ecff;
+            border-color: #8ac9fe;
+        }
+
+        .option input[type="radio"]:checked + label {
+            background-color: #2193b0;
+            border-color: #1c7a93;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            margin-top: 2rem;
+            padding: 1.1rem;
+            background: linear-gradient(45deg, #ff7e5f, #feb47b);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        /* Result Page Styles */
+        .result-page {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .result-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            padding: 3rem 4rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 550px;
+            text-align: center;
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .result-header h1 {
+            font-size: 3.5rem;
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+
+        .result-header p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 2.5rem;
+        }
+
+        @keyframes scorePulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .score-display {
+            background-color: #ff7e5f;
+            color: #fff;
+            border-radius: 50%;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 2.5rem auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(255, 126, 95, 0.4);
+            animation: scorePulse 2s infinite ease-in-out;
+        }
+
+        .score-display .score {
+            font-size: 4rem;
+            font-weight: 700;
+        }
+
+        .score-display .total {
+            font-size: 1.2rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .try-again-btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: #2c3e50;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .try-again-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 15px rgba(44, 62, 80, 0.3);
+            background: #34495e;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .result-container {
+                padding: 2rem;
+            }
+            .result-header h1 {
+                font-size: 2.8rem;
+            }
+            .score-display {
+                width: 150px;
+                height: 150px;
+            }
+            .score-display .score {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Start Page -->
+    <div id="start-page" class="start-page">
+        <h1 class="main-title">General Knowledge Challenge</h1>
+        <p class="subtitle">Are you ready to test your knowledge?</p>
+        <button class="start-button" onclick="startQuiz()">Let's Start!</button>
+    </div>
+
+    <!-- Quiz Page -->
+    <div id="quiz-page" class="quiz-page hidden">
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h1>General Knowledge Quiz</h1>
+                <p>Test your knowledge!</p>
+            </div>
+            <form id="quiz-form" class="quiz-form">
+                <!-- Questions will be dynamically inserted here -->
+            </form>
+        </div>
+    </div>
+
+    <!-- Result Page -->
+    <div id="result-page" class="result-page hidden">
+        <div class="result-container">
+            <div class="result-header">
+                <h1>Congratulations!</h1>
+                <p>You have completed the quiz.</p>
+            </div>
+            <div class="score-display">
+                <span class="score" id="user-score">0</span>
+                <span class="total">out of 5</span>
+            </div>
+            <button class="try-again-btn" onclick="restartQuiz()">Try Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Question Bank
+        const questionBank = [
+            { question: "What is the capital of Japan?", option: ["Beijing", "Seoul", "Tokyo"], answer: "Tokyo" },
+            { question: "Which planet is known as the Red Planet?", option: ["Mars", "Jupiter", "Venus"], answer: "Mars" },
+            { question: "Who wrote the play 'Romeo and Juliet'?", option: ["Charles Dickens", "William Shakespeare", "Mark Twain"], answer: "William Shakespeare" },
+            { question: "What is the largest mammal in the world?", option: ["African Elephant", "Blue Whale", "Giraffe"], answer: "Blue Whale" },
+            { question: "In which country would you find the Eiffel Tower?", option: ["Italy", "Spain", "France"], answer: "France" },
+            { question: "What is the chemical symbol for gold?", option: ["Ag", "Au", "Gd"], answer: "Au" },
+            { question: "Which artist painted the Mona Lisa?", option: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci"], answer: "Leonardo da Vinci" },
+            { question: "What is the hardest natural substance on Earth?", option: ["Diamond", "Quartz", "Gold"], answer: "Diamond" },
+            { question: "What is the longest river in the world?", option: ["Amazon River", "Nile River", "Yangtze River"], answer: "Nile River" },
+            { question: "Who is credited with inventing the telephone?", option: ["Thomas Edison", "Alexander Graham Bell", "Nikola Tesla"], answer: "Alexander Graham Bell" },
+            { question: "In which year did World War II end?", option: ["1945", "1939", "1918"], answer: "1945" },
+            { question: "What is the capital of Australia?", option: ["Sydney", "Melbourne", "Canberra"], answer: "Canberra" },
+            { question: "Which element is most abundant in the Earth's atmosphere?", option: ["Oxygen", "Nitrogen", "Carbon Dioxide"], answer: "Nitrogen" },
+            { question: "What is the currency of India?", option: ["Rupee", "Yen", "Taka"], answer: "Rupee" },
+            { question: "How many continents are there?", option: ["5", "6", "7"], answer: "7" }
+        ];
+
+        let currentQuestions = [];
+        let correctAnswers = [];
+
+
+        function getRandomQuestions() {
+            // const data = new Set();
+            // while (data.size < 5 && data.size < questionBank.length) {
+            //     const randomIndex = Math.floor(Math.random() * questionBank.length);
+            //     data.add(questionBank[randomIndex]);
+            // }
+            // return [...data]; iski tc o(n) aati hai
+
+
+            // aj hum apne question bank array ko randomly sort krenge 
+            // questionBank.sort(() => Math.random() - 0.5);
+            // // Math.random() ==> 0 se 1 ke bich me to ye kuch positive and kuch negative la dega
+            // return questionBank.slice(0, 5);
+            // lakin iskti tc o(nlogn) aati jo uper wale se bhi bekar h 
+
+
+// ab ek aur algo hota h fishal algo jiski tc o(n) aati h
+            const arr = [];
+            let length = questionBank.length;
+            for (let i = 0; i < 5; i++) {
+                const randomIndex = Math.floor(Math.random() * length);
+                arr.push(questionBank[randomIndex]);
+                // Remove the selected question from the original array
+                 let element = questionBank[randomIndex];
+                questionBank[randomIndex] = questionBank[length - 1];
+                questionBank[length - 1] = element;
+                length--;
+            }
+            return arr;
+        }
+
+        function startQuiz() {
+           document.getElementById('start-page').classList.add('hidden');
+            document.getElementById('quiz-page').classList.remove('hidden');
+            
+            // Generate questions
+            currentQuestions = getRandomQuestions();
+            correctAnswers = currentQuestions.map(q => q.answer);
+            
+            // Build the quiz form
+            buildQuizForm();
+        }
+
+        function buildQuizForm() {
+            const form = document.getElementById('quiz-form');
+            form.innerHTML = ''; // Clear existing content
+            
+            currentQuestions.forEach((obj, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'quiz-question';
+
+                const p = document.createElement('p');
+                p.className = 'question-text';
+                p.textContent = `${index + 1}. ${obj.question}`;
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+
+                obj.option.forEach((optionText, i) => {
+                    const singleOptionDiv = document.createElement('div');
+                    singleOptionDiv.className = 'option';
+
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.id = `q${index + 1}-op${i + 1}`;
+                    input.name = `question${index + 1}`;
+                    input.value = optionText;
+
+                    const label = document.createElement('label');
+                    label.htmlFor = `q${index + 1}-op${i + 1}`;
+                    label.textContent = optionText;
+
+                    singleOptionDiv.append(input, label);
+                    optionsDiv.append(singleOptionDiv);
+                });
+
+                questionDiv.append(p, optionsDiv);
+                form.append(questionDiv);
+            });
+
+            const submitButton = document.createElement('button');
+            submitButton.type = 'submit';
+            submitButton.className = 'submit-btn';
+            submitButton.textContent = 'Submit Quiz';
+            form.append(submitButton);
+
+            // Add form submit event listener
+            form.addEventListener('submit', handleSubmit);
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const userAnswers = Array.from(formData.values());
+            
+            // Calculate score
+            let score = 0;
+            for (let i = 0; i < userAnswers.length; i++) {
+                if (userAnswers[i] && correctAnswers[i] && 
+                    userAnswers[i].toLowerCase() === correctAnswers[i].toLowerCase()) {
+                    score++;
+                }
+            }
+            
+            // Show result page
+            showResult(score);
+        }
+
+        function showResult(score) {
+            document.getElementById('quiz-page').classList.add('hidden');
+            document.getElementById('result-page').classList.remove('hidden');
+            
+            // Display the score
+            document.getElementById('user-score').textContent = score;
+        }
+
+        function restartQuiz() {
+            document.getElementById('result-page').classList.add('hidden');
+            document.getElementById('start-page').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
